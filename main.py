@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-
+from datetime import datetime
 app = FastAPI()
 
 
 @app.get("/")
-async def root():
-    return {"Hello lbvz"}
+def read_root():
+    return {"Hello": "robert"}
 
 @app.get("/items/{item_id}")
 async def read_item(item_id):
