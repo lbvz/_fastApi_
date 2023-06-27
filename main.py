@@ -13,9 +13,10 @@ async def read_item(item_id):
 
 #query parameter
 @app.get("/raspberry")
-async def read_item(time:datetime = datetime.now(),light: float = 0.0, temperature: float = 0.0):
+async def read_item(time:str = datetime.now().strftime("%Y%m%d %H:%M:%S"),light: float = 0.0, temperature: float = 0.0):
+    
     return {
-        "時間":time.strftime("%Y%m%d %H:%M:%S"),
+        "時間":time,
         "光線":light,
         "溫度":temperature
     }
