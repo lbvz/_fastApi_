@@ -3,6 +3,8 @@ from datetime import datetime
 import sqlite3
 from sqlite3 import Error
 from sqlite3 import Connection
+import csv
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -83,3 +85,21 @@ async def read_item2(item_count:int):
         rows = select_all_tasks(conn, item_count)            
         conn.close()
         return rows
+    
+@app.get("/iot1_csv/{item_count}")
+async def read_item2(item_count:int):
+    conn = create_connection('data.db')
+    if conn is not None:
+        create_table(conn)
+        rows = select_all_tasks(conn, item_count)  
+        with open('output.csv','w',encoding='utf8',newline='') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow(['時間','亮度','溫度'])
+            for row in rows:
+                csv_writer.writerow(row)     
+
+        conn.close()
+    
+    response = FileResponse("output.csv", media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=downloaded_file.csv"
+    return  response
